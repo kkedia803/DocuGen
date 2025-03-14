@@ -6,41 +6,56 @@ import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    if (!session || !session.user || !session.user.email) {
+      return NextResponse.json({ error: "Unauthorized or missing user email" }, { status: 401 })
     }
 
-    const { repo, documentType, repoContent } = await request.json()
+    const body = await req.json()
+    const { repo, documentType, repoContent } = body
 
     if (!repo || !documentType || !repoContent) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
     }
 
-    // Initialize Gemini AI
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "")
+    if (!process.env.GEMINI_API_KEY) {
+      return NextResponse.json({ error: "API key not configured" }, { status: 500 })
+    }
+
+    let user = await prisma.user.findUnique({
+      where: {
+        email: session.user.email,
+      },
+    })
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email: session.user.email,
+          name: session.user.name || session.user.email.split('@')[0],
+        },
+      })
+    }
+
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" })
 
-    // Create a prompt based on document type and repository content
     const prompt = createPromptForDocumentType(documentType, repo, repoContent)
 
-    // Generate content with Gemini AI
     const result = await model.generateContent(prompt)
     const response = await result.response
     const generatedText = response.text()
 
-    console.log(result)
-    // Save the document to the database
     const document = await prisma.document.create({
       data: {
         title: `${documentType} for ${repo}`,
         content: generatedText,
         repository: repo,
         documentType,
-        userId: session.user.id,
+        userId: user.id,
       },
     })
 
@@ -49,8 +64,14 @@ export async function POST(request: Request) {
       content: generatedText,
     })
   } catch (error) {
-    console.error("Error generating document:", error)
-    return NextResponse.json({ error: "Failed to generate document" }, { status: 500 })
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    
+    console.log("Error generating document:", errorMessage)
+    
+    return NextResponse.json({ 
+      error: "Failed to generate document", 
+      details: errorMessage 
+    }, { status: 500 })
   }
 }
 
@@ -185,4 +206,5 @@ Format the document in Markdown with proper headings, lists, and code examples w
       `
   }
 }
+
 

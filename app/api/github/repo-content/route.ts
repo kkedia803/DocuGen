@@ -18,8 +18,8 @@ export async function GET(request: Request) {
     }
 
     // Get the GitHub access token from the session
-    // const token = session.accessToken as string
-    const token = "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";
+    const token = session.accessToken as string
+    // const token = "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";
 
     if (!token) {
       return NextResponse.json({ error: "GitHub token not found" }, { status: 401 })
