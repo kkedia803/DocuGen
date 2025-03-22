@@ -28,7 +28,7 @@ export default async function DocumentsPage() {
   return (
     <DashboardShell>
       <DashboardHeader heading="Documents" text="Manage your generated documents" />
-      <div className="grid gap-8">
+      <div >
         <DocumentsList documents={documents} />
       </div>
     </DashboardShell>

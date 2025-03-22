@@ -15,7 +15,7 @@ export default async function SettingsPage() {
   return (
     <DashboardShell>
       <DashboardHeader heading="Settings" text="Manage your account settings and preferences" />
-      <div className="grid gap-8">
+      <div >
         <UserSettings user={session.user} />
       </div>
     </DashboardShell>
