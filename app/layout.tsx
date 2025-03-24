@@ -21,8 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light">
+      <body className="bg-neutral-950 text-white montserrat-font">
+        <ThemeProvider attribute="class" defaultTheme="">
           <AuthProvider>
             {children}
             <Toaster />

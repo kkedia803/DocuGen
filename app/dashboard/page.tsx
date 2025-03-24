@@ -23,7 +23,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   return (
     <DashboardShell>
       <DashboardHeader heading="Dashboard" text="Generate documents from your GitHub repositories" />
-      <div className="grid gap-8">
+      <div >
         <div className="space-y-4">
           <div className="grid gap-6">
             <GenerateDocumentForm initialRepo={repo} />
