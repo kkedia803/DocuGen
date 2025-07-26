@@ -19,7 +19,7 @@ export default function LoginPage() {
           </Link>
           <div className="w-full max-w-md space-y-6 rounded-lg border bg-card p-6 shadow-sm">
             <div className="space-y-2 text-center">
-              <h1 className="text-3xl font-bold">Login</h1>
+              <h1 className="text-3xl font-bold text-black">Login</h1>
               <p className="text-gray-500 dark:text-gray-400">Sign in to your account to continue</p>
             </div>
             <LoginForm />

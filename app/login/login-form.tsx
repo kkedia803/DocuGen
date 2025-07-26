@@ -27,7 +27,7 @@ export function LoginForm() {
 
   return (
     <div className="space-y-4">
-      <Button variant="outline" className="w-full" onClick={handleGitHubLogin} disabled={isLoading}>
+      <Button variant="outline" className="w-full text-black" onClick={handleGitHubLogin} disabled={isLoading}>
         <Github className="mr-2 h-4 w-4" />
         {isLoading ? "Signing in..." : "Sign in with GitHub"}
       </Button>
