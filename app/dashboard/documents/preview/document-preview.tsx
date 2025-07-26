@@ -19,6 +19,8 @@ interface Document {
   documentType: string
   createdAt: string
   updatedAt: string
+  createElement: any
+  body: any
 }
 
 interface DocumentPreviewProps {

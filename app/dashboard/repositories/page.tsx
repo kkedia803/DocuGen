@@ -15,7 +15,7 @@ export default async function RepositoriesPage() {
   return (
     <DashboardShell>
       <DashboardHeader heading="Repositories" text="View and manage your GitHub repositories" />
-      <div className="grid gap-8">
+      <div >
         <RepositoriesList />
       </div>
     </DashboardShell>

@@ -10,7 +10,8 @@ const prisma = new PrismaClient()
 
 interface PreviewPageProps {
   searchParams: {
-    id?: string
+    id?: any,
+    userId?: any,
   }
 }
 
@@ -31,7 +32,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
   const document = await prisma.document.findUnique({
     where: {
       id,
-      userId: session.user.id, // Ensure the document belongs to the user
+      userId: session?.user?.id, // Ensure the document belongs to the user
     },
   })
 
@@ -42,7 +43,7 @@ export default async function PreviewPage({ searchParams }: PreviewPageProps) {
   return (
     <DashboardShell>
       <DashboardHeader heading="Document Preview" text="Review and edit your generated document" />
-      <div className="grid gap-8">
+      <div>
         <DocumentPreview document={document} />
       </div>
     </DashboardShell>
